@@ -1,4 +1,7 @@
 // pages/home/home.js
+
+import {Home} from 'home-model.js';
+var home = new Home();
 Page({
 
   /**
@@ -12,8 +15,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    this._loadData();
   },
+  /**
+   * 具体业务写在自定义方法里面
+   */
+  _loadData:function(){
+    var id = 1;
+    var data = home.getBannerData(id,(res)=>{
+      console.log(res);
+    });//getBannerData是异步的方法，所以不能用赋值
+    // console.log(data);
+  },
+  // callBack:function(res){
+  //   console.log(res);
+  // },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
