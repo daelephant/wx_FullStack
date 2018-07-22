@@ -6,12 +6,12 @@ class Home extends Base{
   constructor(){
     super();
   }
-  getBannerData(id,callBack){
+  getBannerData(id,callback){
 
     var params = {
       url : 'banner/'+id,
-      sCallBack:function(res){
-        callback && callback(res);
+      sCallback:function(res){
+        callback && callback(res.items);
       }
     }
     this.request(params);
@@ -22,10 +22,32 @@ class Home extends Base{
     //   success:function(res){
     //     // console.log(res);
     //     // return res;
-    //     callBack(res);
+    //     callback(res);
     //   }
     // })
   }
+
+  /*首页主题*/
+  getThemeData(callback) {
+    var param = {
+      url: 'theme?ids=1,2,3',
+      sCallback: function (data) {
+        callback && callback(data);
+      }
+    };
+    this.request(param);
+  }
+
+  getProductsData(callback){
+    var param = {
+      url:'product/recent',
+      sCallback:function(data){
+        callback && callback(data);
+      }
+    };
+    this.request(param);
+  }
+
 }
 
 export {Home};

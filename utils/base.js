@@ -22,15 +22,20 @@ class Base{
         'token':wx.getStorageSync('token')
       },
       success:function(res){
-        // if(params.sCallBack){
-        //   params.sCallBack(res);
+        // if(params.sCallback){
+        //   params.sCallback(res);
         // }
-        params.sCallBack&&params.sCallBack(res);
+        params.sCallback&&params.sCallback(res.data);
       },
       fail:function(err){
         console.log(err);
       }
     })
+  }
+
+  // 获取元素上的绑定的值
+  getDataSet(event,key){
+    return event.currentTarget.dataset[key];
   }
 }
 export {Base};
