@@ -11,6 +11,11 @@ Page({
   data: {
   
   },
+  onReady: function () {
+    wx.setNavigationBarTitle({
+      title: this.data.titleName
+    });
+  },
 
   /**
    * 生命周期函数--监听页面加载
