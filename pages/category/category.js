@@ -1,4 +1,7 @@
 // pages/category/category.js
+import { Category } from 'category-model.js';
+var category = new Category();  //实例化 home 的推荐页面
+
 Page({
 
   /**
@@ -12,7 +15,31 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    this._loadData();//初始化
+  },
+  /*加载所有数据*/
+  _loadData: function (callback) {
+    var that = this;
+    category.getCategoryType((categoryData) => {
+
+      that.setData({
+        categoryTypeArr: categoryData,
+        loadingHidden: true
+      });
+
+      that.getProductsByCategory(categoryData[0].id, (data) => {
+        var dataObj = {
+          procucts: data,
+          topImgUrl: categoryData[0].img.url,
+          title: categoryData[0].name
+        };
+        that.setData({
+          loadingHidden: true,
+          categoryInfo0: dataObj
+        });
+        callback && callback();
+      });
+    });
   },
 
   /**
