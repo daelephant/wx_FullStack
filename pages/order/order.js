@@ -14,7 +14,7 @@ Page({
   data: {
     fromCartFlag: true,
     addressInfo: null,
-    id:-1
+    id:null
   },
 
   /**
@@ -38,6 +38,31 @@ Page({
       that._bindAddressInfo(res);
     });
   },
+
+  onShow: function () {
+    if (this.data.id) {
+      var that = this;
+      //下单后，支付成功或者失败后，点左上角返回时能够更新订单状态 所以放在onshow中
+      var id = this.data.id;
+      order.getOrderInfoById(id, (data) => {
+        that.setData({
+          orderStatus: data.status,
+          productsArr: data.snap_items,
+          account: data.total_price,
+          basicInfo: {
+            orderTime: data.create_time,
+            orderNo: data.order_no
+          },
+        });
+
+        // 快照地址
+        var addressInfo = data.snap_address;
+        addressInfo.totalDetail = address.setAddressInfo(addressInfo);
+        that._bindAddressInfo(addressInfo);
+      });
+    }
+  },
+
 
   editAddress:function(event){
     var that = this;//success回调函数里面是不可以用this的，this指代的环境已经改变
@@ -115,6 +140,47 @@ Page({
 
 
   /*
+    *下单失败
+    * params:
+    * data - {obj} 订单结果信息
+    * */
+  _orderFail: function (data) {
+    var nameArr = [],
+      name = '',
+      str = '',
+      pArr = data.pStatusArray;
+    for (let i = 0; i < pArr.length; i++) {
+      if (!pArr[i].haveStock) {
+        name = pArr[i].name;
+        if (name.length > 15) {
+          name = name.substr(0, 12) + '...';
+        }
+        nameArr.push(name);
+        if (nameArr.length >= 2) {
+          break;
+        }
+      }
+    }
+    str += nameArr.join('、');
+    if (nameArr.length > 2) {
+      str += ' 等';
+    }
+    str += ' 缺货';
+    wx.showModal({
+      title: '下单失败',
+      content: str,
+      showCancel: false,
+      success: function (res) {
+
+      }
+    });
+  },
+
+  /* 再次次支付*/
+  _oneMoresTimePay: function () {
+    this._execPay(this.data.id);
+  },
+  /*
   *开始支付
   * params:
   * id - {int}订单id
@@ -167,53 +233,6 @@ Page({
         }
       }
     });
-  },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
   }
+
 })
