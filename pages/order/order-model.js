@@ -82,6 +82,7 @@ class Order extends Base {
     var that = this;
     var allParams = {
       url: 'order/' + id,
+      type: 'post',
       sCallback: function (data) {
         callback && callback(data);
       },

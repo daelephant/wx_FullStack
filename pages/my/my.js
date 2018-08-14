@@ -106,6 +106,7 @@ Page({
   /*显示订单的具体信息*/
   showOrderDetailInfo: function (event) {
     var id = order.getDataSet(event, 'id');
+    //console.log(id);
     wx.navigateTo({
       url: '../order/order?from=order&id=' + id
     });
